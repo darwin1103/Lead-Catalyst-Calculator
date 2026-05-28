@@ -138,6 +138,24 @@ class Lead_Catalyst_Calculator_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->add_control(
+            'form_title_text',
+            [
+                'label'   => esc_html__( 'Lead Form Title', 'lead-catalyst' ),
+                'type'    => \Elementor\Controls_Manager::TEXT,
+                'default' => esc_html__( 'Request a Copy of Your Estimate', 'lead-catalyst' ),
+            ]
+        );
+
+        $this->add_control(
+            'form_desc_text',
+            [
+                'label'   => esc_html__( 'Lead Form Description', 'lead-catalyst' ),
+                'type'    => \Elementor\Controls_Manager::TEXTAREA,
+                'default' => esc_html__( 'Enter your details below to save your calculation details and connect with our team.', 'lead-catalyst' ),
+            ]
+        );
+
         $this->end_controls_section();
 
         // Style Tab: General Layout & Card Section
@@ -339,6 +357,100 @@ class Lead_Catalyst_Calculator_Widget extends \Elementor\Widget_Base {
         );
 
         $this->end_controls_section();
+
+        // Style Tab: Lead Form & Button Styles
+        $this->start_controls_section(
+            'section_style_form',
+            [
+                'label' => esc_html__( 'Lead Form & Submit Button', 'lead-catalyst' ),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_control(
+            'desc_color',
+            [
+                'label'     => esc_html__( 'Description Text Color', 'lead-catalyst' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .lc-form-description' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'desc_typography',
+                'selector' => '{{WRAPPER}} .lc-form-description',
+            ]
+        );
+
+        $this->add_control(
+            'btn_bg',
+            [
+                'label'     => esc_html__( 'Button Background Color', 'lead-catalyst' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .lc-submit-btn' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'btn_text_color',
+            [
+                'label'     => esc_html__( 'Button Text Color', 'lead-catalyst' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .lc-submit-btn' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'btn_hover_bg',
+            [
+                'label'     => esc_html__( 'Button Hover Background', 'lead-catalyst' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .lc-submit-btn:hover' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'btn_hover_text_color',
+            [
+                'label'     => esc_html__( 'Button Hover Text Color', 'lead-catalyst' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .lc-submit-btn:hover' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'btn_border_radius',
+            [
+                'label'      => esc_html__( 'Button Border Radius', 'lead-catalyst' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
+                'selectors'  => [
+                    '{{WRAPPER}} .lc-submit-btn' => 'border-radius: {{TOP}}{{SIZE}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'btn_typography',
+                'selector' => '{{WRAPPER}} .lc-submit-btn',
+            ]
+        );
+
+        $this->end_controls_section();
     }
 
     /**
@@ -347,12 +459,14 @@ class Lead_Catalyst_Calculator_Widget extends \Elementor\Widget_Base {
     protected function render() {
         $settings = $this->get_settings_for_display();
 
-        $calc_mode = $settings['calc_mode'];
-        $default_tab = $settings['default_tab'];
-        $roi_title = $settings['roi_title'];
+        $calc_mode    = $settings['calc_mode'];
+        $default_tab  = $settings['default_tab'];
+        $roi_title    = $settings['roi_title'];
         $missed_title = $settings['missed_title'];
         $default_conv = $settings['default_conv_rate'];
         $default_sale = $settings['default_sale_amount'];
+        $form_title   = $settings['form_title_text'];
+        $form_desc    = $settings['form_desc_text'];
 
         // Determine initial visibility classes based on settings
         $show_roi = true;
@@ -546,7 +660,63 @@ class Lead_Catalyst_Calculator_Widget extends \Elementor\Widget_Base {
                 </div>
             </div>
 
+            <!-- LEAD CAPTURE FORM SECTION (FULL WIDTH BELOW GRID) -->
+            <div class="lc-lead-form-section lc-card" style="margin-top: 30px;">
+                <h3 class="lc-form-title"><?php echo esc_html( $form_title ); ?></h3>
+                <?php if ( ! empty( $form_desc ) ) : ?>
+                    <p class="lc-form-description" style="margin-bottom: 25px; font-size: 15px; color: #4a5568;"><?php echo esc_html( $form_desc ); ?></p>
+                <?php endif; ?>
+
+                <form class="lc-lead-form" id="lc-lead-capture-form">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px;">
+                        <div class="lc-form-group">
+                            <label class="lc-label" for="lc-lead-name"><?php esc_html_e( 'Full Name', 'lead-catalyst' ); ?> *</label>
+                            <div class="lc-input-wrapper">
+                                <input type="text" id="lc-lead-name" class="lc-input lc-field-name" required placeholder="<?php esc_html_e( 'John Doe', 'lead-catalyst' ); ?>" style="padding-left: 14px;">
+                            </div>
+                        </div>
+
+                        <div class="lc-form-group">
+                            <label class="lc-label" for="lc-lead-company"><?php esc_html_e( 'Company Name', 'lead-catalyst' ); ?> *</label>
+                            <div class="lc-input-wrapper">
+                                <input type="text" id="lc-lead-company" class="lc-input lc-field-company" required placeholder="<?php esc_html_e( 'Acme Corp', 'lead-catalyst' ); ?>" style="padding-left: 14px;">
+                            </div>
+                        </div>
+
+                        <div class="lc-form-group">
+                            <label class="lc-label" for="lc-lead-email"><?php esc_html_e( 'Email Address', 'lead-catalyst' ); ?> *</label>
+                            <div class="lc-input-wrapper">
+                                <input type="email" id="lc-lead-email" class="lc-input lc-field-email" required placeholder="<?php esc_html_e( 'john@example.com', 'lead-catalyst' ); ?>" style="padding-left: 14px;">
+                            </div>
+                        </div>
+
+                        <div class="lc-form-group">
+                            <label class="lc-label" for="lc-lead-phone"><?php esc_html_e( 'Phone Number', 'lead-catalyst' ); ?> *</label>
+                            <div class="lc-input-wrapper">
+                                <input type="tel" id="lc-lead-phone" class="lc-input lc-field-phone" required placeholder="<?php esc_html_e( '(555) 123-4567', 'lead-catalyst' ); ?>" style="padding-left: 14px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: center;">
+                        <button type="submit" class="lc-submit-btn" style="background-color: var(--lc-secondary); color: #ffffff; border: none; padding: 14px 40px; font-size: 16px; font-weight: 700; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: auto; min-width: 200px;">
+                            <span class="lc-btn-text"><?php esc_html_e( 'Send My Results', 'lead-catalyst' ); ?></span>
+                            <span class="lc-btn-spinner lc-hidden" style="animation: spin 1s infinite linear; display: inline-block;">&#8635;</span>
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="lc-form-message lc-hidden" style="margin-top: 20px; padding: 15px; border-radius: 6px; font-weight: 600; text-align: center;"></div>
+            </div>
+
         </div>
+        
+        <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        </style>
         <?php
     }
 }

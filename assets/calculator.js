@@ -75,6 +75,7 @@
         const roiSection = container.querySelector('.lc-roi-calc-section');
         const missedSection = container.querySelector('.lc-missed-calc-section');
         const tabsContainer = container.querySelector('.lc-calculator-tabs');
+        const leadForm = container.querySelector('#lc-lead-capture-form');
 
         // Handles tab switching if toggle mode is enabled
         if (tabsContainer) {
@@ -120,6 +121,14 @@
 
             if (missedConvInput) missedConvInput.addEventListener('input', updateMissed);
             if (missedSaleInput) missedSaleInput.addEventListener('input', updateMissed);
+        }
+
+        // Lead capture form submit listener
+        if (leadForm) {
+            leadForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                submitLeadData(container, leadForm);
+            });
         }
 
         // Initial calculations
@@ -250,6 +259,111 @@
         if (cell) {
             cell.textContent = value;
         }
+    }
+
+    // Submit Lead Capture Form Async to REST API
+    function submitLeadData(container, form) {
+        const messageBox = container.querySelector('.lc-form-message');
+        const submitBtn = form.querySelector('.lc-submit-btn');
+        const spinner = submitBtn.querySelector('.lc-btn-spinner');
+        const btnText = submitBtn.querySelector('.lc-btn-text');
+
+        // Check active calculator
+        const isRoiActive = !container.querySelector('.lc-roi-calc-section').classList.contains('lc-hidden');
+        let calcType = 'roi';
+        let industry = '';
+        let inputs = {};
+        let outputs = {};
+
+        if (isRoiActive) {
+            calcType = 'roi';
+            const roiSection = container.querySelector('.lc-roi-calc-section');
+            industry = roiSection.querySelector('.lc-industry-select').value;
+            
+            inputs['conversion-rate'] = roiSection.querySelector('.lc-roi-conv-input').value + '%';
+            inputs['average-sale'] = '$' + roiSection.querySelector('.lc-roi-sale-input').value;
+            
+            outputs['dials-annual'] = roiSection.querySelector('.lc-val-roi-dials-annual').textContent;
+            outputs['connections-annual'] = roiSection.querySelector('.lc-val-roi-conn-annual').textContent;
+            outputs['qualified-leads-annual'] = roiSection.querySelector('.lc-val-roi-leads-annual').textContent;
+            outputs['annual-conversions'] = roiSection.querySelector('.lc-val-roi-sales-annual').textContent;
+            outputs['annual-revenue'] = roiSection.querySelector('.lc-val-roi-rev-annual').textContent;
+            outputs['estimated-roi'] = roiSection.querySelector('.lc-roi-hero-value').textContent;
+            outputs['net-annual-return'] = roiSection.querySelector('.lc-roi-hero-sub').textContent.replace('Net Annual Return: ', '');
+        } else {
+            calcType = 'missed_opportunity';
+            const missedSection = container.querySelector('.lc-missed-calc-section');
+            
+            inputs['conversion-rate'] = missedSection.querySelector('.lc-missed-conv-input').value + '%';
+            inputs['average-sale'] = '$' + missedSection.querySelector('.lc-missed-sale-input').value;
+            
+            outputs['dials-annual'] = missedSection.querySelector('.lc-val-missed-dials-annual').textContent;
+            outputs['connections-annual'] = missedSection.querySelector('.lc-val-missed-conn-annual').textContent;
+            outputs['qualified-leads-annual'] = missedSection.querySelector('.lc-val-missed-leads-annual').textContent;
+            outputs['annual-conversions'] = missedSection.querySelector('.lc-val-missed-sales-annual').textContent;
+            outputs['missed-revenue-opportunity'] = missedSection.querySelector('.lc-roi-hero-value').textContent;
+        }
+
+        const payload = {
+            name: form.querySelector('.lc-field-name').value,
+            company: form.querySelector('.lc-field-company').value,
+            email: form.querySelector('.lc-field-email').value,
+            phone: form.querySelector('.lc-field-phone').value,
+            calc_type: calcType,
+            industry: industry,
+            inputs: inputs,
+            outputs: outputs
+        };
+
+        // UI Feedback: Loading
+        submitBtn.disabled = true;
+        if (spinner) spinner.classList.remove('lc-hidden');
+        if (btnText) btnText.textContent = 'Submitting...';
+        if (messageBox) {
+            messageBox.className = 'lc-form-message lc-hidden';
+        }
+
+        // Fetch using localized WP vars
+        fetch(lcVars.restUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-WP-Nonce': lcVars.nonce
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json().then(data => ({ status: response.status, data })))
+        .then(({ status, data }) => {
+            if (status === 200 && data.success) {
+                // Success
+                if (messageBox) {
+                    messageBox.textContent = data.message;
+                    messageBox.className = 'lc-form-message';
+                    messageBox.style.backgroundColor = '#ecfdf5';
+                    messageBox.style.border = '1px solid #10b981';
+                    messageBox.style.color = '#065f46';
+                }
+                form.reset();
+            } else {
+                // Fail
+                throw new Error(data.message || 'Submission failed');
+            }
+        })
+        .catch(err => {
+            if (messageBox) {
+                messageBox.textContent = err.message || 'An error occurred. Please try again.';
+                messageBox.className = 'lc-form-message';
+                messageBox.style.backgroundColor = '#fef2f2';
+                messageBox.style.border = '1px solid #ef4444';
+                messageBox.style.color = '#991b1b';
+            }
+        })
+        .finally(() => {
+            // UI Feedback: Reset
+            submitBtn.disabled = false;
+            if (spinner) spinner.classList.add('lc-hidden');
+            if (btnText) btnText.textContent = 'Send My Results';
+        });
     }
 
     // DOM Ready hook for non-Elementor rendering

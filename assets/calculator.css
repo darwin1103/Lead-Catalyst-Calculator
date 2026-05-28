@@ -297,3 +297,33 @@
 .lc-animate-pulse {
     animation: lc-pulse 2s infinite ease-in-out;
 }
+
+/* Lead Capture Form Styles */
+.lc-lead-form-section {
+    background: var(--lc-bg-card);
+    border: 1px solid var(--lc-border-color);
+}
+
+.lc-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.lc-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.lc-submit-btn:active {
+    transform: translateY(0);
+}
+
+.lc-form-message {
+    transition: all 0.3s ease;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
