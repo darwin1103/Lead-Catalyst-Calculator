@@ -77,8 +77,8 @@
         const tabsContainer = container.querySelector('.lc-calculator-tabs');
         const leadForm = container.querySelector('#lc-lead-capture-form');
 
-        // Handles tab switching if toggle mode is enabled
-        if (tabsContainer) {
+        // Handles tab switching if toggle mode is enabled (guarded)
+        if (tabsContainer && tabsContainer.dataset.lcBound !== 'true') {
             const tabs = tabsContainer.querySelectorAll('.lc-tab-btn');
             tabs.forEach(tab => {
                 tab.addEventListener('click', function () {
@@ -97,9 +97,10 @@
                     }
                 });
             });
+            tabsContainer.dataset.lcBound = 'true';
         }
 
-        // Initialize ROI inputs and event listeners
+        // Initialize ROI inputs and event listeners (guarded)
         if (roiSection) {
             const industrySelect = roiSection.querySelector('.lc-industry-select');
             const roiConvInput = roiSection.querySelector('.lc-roi-conv-input');
@@ -107,28 +108,44 @@
 
             const updateRoi = () => calculateROI(container);
 
-            if (industrySelect) industrySelect.addEventListener('change', updateRoi);
-            if (roiConvInput) roiConvInput.addEventListener('input', updateRoi);
-            if (roiSaleInput) roiSaleInput.addEventListener('input', updateRoi);
+            if (industrySelect && industrySelect.dataset.lcBound !== 'true') {
+                industrySelect.addEventListener('change', updateRoi);
+                industrySelect.dataset.lcBound = 'true';
+            }
+            if (roiConvInput && roiConvInput.dataset.lcBound !== 'true') {
+                roiConvInput.addEventListener('input', updateRoi);
+                roiConvInput.dataset.lcBound = 'true';
+            }
+            if (roiSaleInput && roiSaleInput.dataset.lcBound !== 'true') {
+                roiSaleInput.addEventListener('input', updateRoi);
+                roiSaleInput.dataset.lcBound = 'true';
+            }
         }
 
-        // Initialize Missed Opportunity inputs and event listeners
+        // Initialize Missed Opportunity inputs and event listeners (guarded)
         if (missedSection) {
             const missedConvInput = missedSection.querySelector('.lc-missed-conv-input');
             const missedSaleInput = missedSection.querySelector('.lc-missed-sale-input');
 
             const updateMissed = () => calculateMissed(container);
 
-            if (missedConvInput) missedConvInput.addEventListener('input', updateMissed);
-            if (missedSaleInput) missedSaleInput.addEventListener('input', updateMissed);
+            if (missedConvInput && missedConvInput.dataset.lcBound !== 'true') {
+                missedConvInput.addEventListener('input', updateMissed);
+                missedConvInput.dataset.lcBound = 'true';
+            }
+            if (missedSaleInput && missedSaleInput.dataset.lcBound !== 'true') {
+                missedSaleInput.addEventListener('input', updateMissed);
+                missedSaleInput.dataset.lcBound = 'true';
+            }
         }
 
-        // Lead capture form submit listener
-        if (leadForm) {
+        // Lead capture form submit listener (guarded)
+        if (leadForm && leadForm.dataset.lcSubmitBound !== 'true') {
             leadForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 submitLeadData(container, leadForm);
             });
+            leadForm.dataset.lcSubmitBound = 'true';
         }
 
         // Initial calculations
@@ -376,12 +393,20 @@
 
     // Elementor Preview / Active Editor hook
     jQuery(window).on('elementor/frontend/init', function () {
-        elementorFrontend.hooks.addAction('frontend/element_ready/lead_catalyst_calculator.default', function ($scope) {
+        elementorFrontend.hooks.addAction('frontend/element_ready/lead-catalyst_calculator.default', function ($scope) {
             // Find and initialize the calculator in the Elementor container scope
             const container = $scope[0].querySelector('.lc-calculator-container');
             if (container) {
-                // Remove initialization flag to force re-render/re-bind in editor
-                delete container.dataset.lcInitialized;
+                // Only force re-initialization inside the active Elementor Editor
+                if (typeof elementorFrontend !== 'undefined' && elementorFrontend.isEditMode && elementorFrontend.isEditMode()) {
+                    delete container.dataset.lcInitialized;
+                    // Reset inputs binding flags in editor to allow re-binding
+                    const boundElements = container.querySelectorAll('[data-lc-bound]');
+                    boundElements.forEach(el => delete el.dataset.lcBound);
+                    if (container.querySelector('#lc-lead-capture-form')) {
+                        delete container.querySelector('#lc-lead-capture-form').dataset.lcSubmitBound;
+                    }
+                }
                 initCalculator(container);
             }
         });
