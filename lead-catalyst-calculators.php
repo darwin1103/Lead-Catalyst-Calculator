@@ -103,6 +103,21 @@ function lc_handle_submit_lead( WP_REST_Request $request ) {
         lc_create_leads_table();
     }
 
+    // Debounce: prevent duplicate submissions from the same email within a 15-second window
+    $last_lead = $wpdb->get_row( $wpdb->prepare(
+        "SELECT submitted_at FROM $table_name WHERE email = %s ORDER BY id DESC LIMIT 1",
+        $email
+    ), ARRAY_A );
+
+    if ( $last_lead ) {
+        $last_submit_time = strtotime( $last_lead['submitted_at'] );
+        $time_diff        = current_time( 'timestamp' ) - $last_submit_time;
+        if ( $time_diff < 15 ) {
+            // Return success immediately without inserting a duplicate or sending duplicate email
+            return new WP_REST_Response( array( 'success' => true, 'message' => esc_html__( 'Your results have been sent successfully!', 'lead-catalyst' ) ), 200 );
+        }
+    }
+
     $inserted = $wpdb->insert(
         $table_name,
         array(
