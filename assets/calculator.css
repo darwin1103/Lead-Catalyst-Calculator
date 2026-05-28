@@ -1,0 +1,299 @@
+/* Lead Catalyst Calculators Stylesheet */
+
+:root {
+    --lc-primary: var(--e-global-color-primary, #0c2340);
+    --lc-secondary: var(--e-global-color-secondary, #1d70b8);
+    --lc-text: var(--e-global-color-text, #333333);
+    --lc-accent: var(--e-global-color-accent, #00a86b);
+    --lc-bg-card: #ffffff;
+    --lc-border-color: #e2e8f0;
+    --lc-success: #10b981;
+    --lc-warning: #f59e0b;
+    --lc-danger: #ef4444;
+}
+
+/* Calculator Wrapper */
+.lc-calculator-container {
+    font-family: inherit;
+    color: var(--lc-text);
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Tabs Navigation */
+.lc-calculator-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--lc-border-color);
+    padding-bottom: 10px;
+}
+
+.lc-tab-btn {
+    background: transparent;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #718096;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -13px;
+}
+
+.lc-tab-btn:hover {
+    color: var(--lc-secondary);
+}
+
+.lc-tab-btn.active {
+    color: var(--lc-primary);
+    border-bottom-color: var(--lc-primary);
+}
+
+/* Calculator Layout Grid */
+.lc-calculator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 30px;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .lc-calculator-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+/* Card Styling */
+.lc-card {
+    background: var(--lc-bg-card);
+    border: 1px solid var(--lc-border-color);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.lc-card:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07);
+}
+
+/* Input Form Controls */
+.lc-form-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--lc-primary);
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--lc-secondary);
+    padding-left: 10px;
+}
+
+.lc-form-group {
+    margin-bottom: 20px;
+}
+
+.lc-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.lc-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--lc-text);
+}
+
+.lc-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.lc-input-icon {
+    position: absolute;
+    left: 14px;
+    color: #a0aec0;
+    font-weight: 600;
+    pointer-events: none;
+    font-size: 16px;
+}
+
+.lc-input {
+    width: 100%;
+    padding: 12px 14px 12px 30px;
+    border: 2px solid var(--lc-border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+    color: var(--lc-text);
+}
+
+.lc-input:focus {
+    border-color: var(--lc-secondary);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(29, 112, 184, 0.15);
+}
+
+.lc-select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--lc-border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+    color: var(--lc-text);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+}
+
+.lc-select:focus {
+    border-color: var(--lc-secondary);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(29, 112, 184, 0.15);
+}
+
+/* Results Section Styling */
+.lc-results-panel {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid var(--lc-border-color);
+}
+
+.lc-results-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--lc-primary);
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Data Table Grid */
+.lc-results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 25px;
+}
+
+.lc-results-table th, 
+.lc-results-table td {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.lc-results-table th {
+    font-weight: 700;
+    color: var(--lc-secondary);
+    border-bottom: 2px solid var(--lc-border-color);
+}
+
+.lc-results-table td {
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.lc-results-table tr:last-child td {
+    border-bottom: none;
+}
+
+.lc-results-table .lc-col-label {
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.lc-results-table .lc-col-value {
+    text-align: right;
+    font-weight: 600;
+    color: var(--lc-text);
+}
+
+/* High impact ROI badges */
+.lc-roi-hero {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid var(--lc-border-color);
+    text-align: center;
+    margin-top: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.lc-roi-hero-label {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #718096;
+    margin-bottom: 5px;
+}
+
+.lc-roi-hero-value {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.2;
+    transition: color 0.3s ease;
+}
+
+.lc-roi-hero-sub {
+    font-size: 14px;
+    color: #4a5568;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+/* ROI Color Indicators */
+.roi-val-positive {
+    color: var(--lc-success);
+}
+
+.roi-val-negative {
+    color: var(--lc-danger);
+}
+
+.roi-hero-positive {
+    border-left: 5px solid var(--lc-success);
+}
+
+.roi-hero-negative {
+    border-left: 5px solid var(--lc-danger);
+}
+
+/* Warning theme for Missed Opportunities */
+.lc-missed-hero {
+    background: #fffbeb;
+    border: 1px solid #fef3c7;
+    border-left: 5px solid var(--lc-warning);
+}
+
+.lc-missed-hero .lc-roi-hero-value {
+    color: #d97706;
+}
+
+/* Hidden Utility */
+.lc-hidden {
+    display: none !important;
+}
+
+/* Micro-animations */
+@keyframes lc-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.lc-animate-pulse {
+    animation: lc-pulse 2s infinite ease-in-out;
+}
