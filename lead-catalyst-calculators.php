@@ -3,7 +3,8 @@
  * Plugin Name: Lead Catalyst Estimators & ROI Calculators
  * Description: Registers a custom Elementor Widget for ROI and Missed Opportunity Calculators, saves submissions, and manages leads.
  * Version: 1.0.0
- * Author: Antigravity
+ * Author: NP Connect
+ * Author URI: https://nickpackard.com/
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
