@@ -171,19 +171,19 @@
         const heroBox = roiSection.querySelector('.lc-roi-hero');
         const heroSub = roiSection.querySelector('.lc-roi-hero-sub');
 
-        // If user hasn't entered values yet, show all zeros
+        // If user hasn't entered values yet, show placeholder dashes
         if (convPct === 0 || saleAmount === 0) {
-            updateCell(roiSection, 'roi-dials-weekly', '0');
-            updateCell(roiSection, 'roi-dials-annual', '0');
-            updateCell(roiSection, 'roi-conn-weekly', '0');
-            updateCell(roiSection, 'roi-conn-annual', '0');
-            updateCell(roiSection, 'roi-leads-weekly', '0');
-            updateCell(roiSection, 'roi-leads-annual', '0');
-            updateCell(roiSection, 'roi-sales-annual', '0');
-            updateCell(roiSection, 'roi-rev-annual', '$0');
-            if (heroVal) { heroVal.textContent = '0%'; heroVal.className = 'lc-roi-hero-value'; }
+            updateCell(roiSection, 'roi-dials-weekly', '—');
+            updateCell(roiSection, 'roi-dials-annual', '—');
+            updateCell(roiSection, 'roi-conn-weekly', '—');
+            updateCell(roiSection, 'roi-conn-annual', '—');
+            updateCell(roiSection, 'roi-leads-weekly', '—');
+            updateCell(roiSection, 'roi-leads-annual', '—');
+            updateCell(roiSection, 'roi-sales-annual', '—');
+            updateCell(roiSection, 'roi-rev-annual', '—');
+            if (heroVal) { heroVal.textContent = '—'; heroVal.className = 'lc-roi-hero-value'; }
             if (heroBox) { heroBox.classList.remove('roi-hero-positive', 'roi-hero-negative'); }
-            if (heroSub) { heroSub.textContent = 'Net Annual Return: $0'; }
+            if (heroSub) { heroSub.textContent = 'Net Annual Return: —'; }
             return;
         }
 
@@ -249,17 +249,17 @@
 
         const heroVal = missedSection.querySelector('.lc-roi-hero-value');
 
-        // If user hasn't entered values yet, show all zeros
+        // If user hasn't entered values yet, show placeholder dashes
         if (convPct === 0 || saleAmount === 0) {
-            updateCell(missedSection, 'missed-dials-weekly', '0');
-            updateCell(missedSection, 'missed-dials-annual', '0');
-            updateCell(missedSection, 'missed-conn-weekly', '0');
-            updateCell(missedSection, 'missed-conn-annual', '0');
-            updateCell(missedSection, 'missed-leads-weekly', '0');
-            updateCell(missedSection, 'missed-leads-annual', '0');
-            updateCell(missedSection, 'missed-sales-annual', '0');
-            updateCell(missedSection, 'missed-rev-annual', '$0');
-            if (heroVal) { heroVal.textContent = '$0'; }
+            updateCell(missedSection, 'missed-dials-weekly', '—');
+            updateCell(missedSection, 'missed-dials-annual', '—');
+            updateCell(missedSection, 'missed-conn-weekly', '—');
+            updateCell(missedSection, 'missed-conn-annual', '—');
+            updateCell(missedSection, 'missed-leads-weekly', '—');
+            updateCell(missedSection, 'missed-leads-annual', '—');
+            updateCell(missedSection, 'missed-sales-annual', '—');
+            updateCell(missedSection, 'missed-rev-annual', '—');
+            if (heroVal) { heroVal.textContent = '—'; }
             return;
         }
 
