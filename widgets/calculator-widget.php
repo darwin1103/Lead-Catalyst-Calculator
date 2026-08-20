@@ -123,7 +123,7 @@ class Lead_Catalyst_Calculator_Widget extends \Elementor\Widget_Base {
                 'min'     => 0,
                 'max'     => 100,
                 'step'    => 0.1,
-                'default' => 10,
+                'default' => 0,
             ]
         );
 
@@ -134,7 +134,7 @@ class Lead_Catalyst_Calculator_Widget extends \Elementor\Widget_Base {
                 'type'    => \Elementor\Controls_Manager::NUMBER,
                 'min'     => 0,
                 'step'    => 1,
-                'default' => 5000,
+                'default' => 0,
             ]
         );
 
