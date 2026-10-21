@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Lead Catalyst Estimators & ROI Calculators
  * Description: Registers a custom Elementor Widget for ROI and Missed Opportunity Calculators, saves submissions, and manages leads.
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: NP Connect
  * Author URI: https://nickpackard.com/
  */
@@ -38,11 +38,14 @@ register_activation_hook( __FILE__, 'lc_create_leads_table' );
 
 // Register frontend assets
 add_action( 'wp_enqueue_scripts', function() {
+    $js_ver  = file_exists( __DIR__ . '/assets/calculator.js' ) ? filemtime( __DIR__ . '/assets/calculator.js' ) : '1.0.3';
+    $css_ver = file_exists( __DIR__ . '/assets/calculator.css' ) ? filemtime( __DIR__ . '/assets/calculator.css' ) : '1.0.3';
+
     wp_register_script(
         'lead-catalyst-calculator-script',
         plugins_url( 'assets/calculator.js', __FILE__ ),
         array( 'jquery' ),
-        '1.0.0',
+        $js_ver,
         true
     );
     // Localize the REST API URL and a nonce so the frontend JS can securely call the backend
@@ -55,7 +58,7 @@ add_action( 'wp_enqueue_scripts', function() {
         'lead-catalyst-calculator-style',
         plugins_url( 'assets/calculator.css', __FILE__ ),
         array(),
-        '1.0.0'
+        $css_ver
     );
 } );
 
