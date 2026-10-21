@@ -37,7 +37,7 @@
     const CONSTANTS = {
         dialsWeekly: 150,
         dialsAnnual: 7500,
-        fixedInvestment: 66000
+        fixedInvestment: 72000 // $6,000/month * 12 months
     };
 
     // Helper: Formats currency
